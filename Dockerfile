@@ -1,15 +1,12 @@
 FROM ubuntu:latest
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN locale-gen en_US en_US.UTF-8 && dpkg-reconfigure locales
+ENV DEBIAN_FRONTEND=noninteractive
+#RUN locale-gen en_US en_US.UTF-8 && dpkg-reconfigure locales
 
 RUN apt-get update && apt-get install -y \
     sane \
     sane-utils \
-    libsane-extras \
-    libsane-hpaio \
     dbus \
-    avahi-utils \
     supervisor \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -21,7 +18,7 @@ RUN adduser saned scanner \
 COPY configure.sh /configure.sh
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-CMD supervisord -c /etc/supervisor/conf.d/supervisord.conf
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 EXPOSE 6566 10000 10001
 
